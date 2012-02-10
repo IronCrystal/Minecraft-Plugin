@@ -1,5 +1,6 @@
 package me.IronCrystal.Torture;
 
+/*import java.io.File;*/
 import java.util.logging.Logger;
 
 import net.minecraft.server.MobEffect;
@@ -17,7 +18,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Torture extends JavaPlugin {
 	public final Logger logger = Logger.getLogger("Minecraft");
+	public static Torture plugin;
 	 public static Permission permission = null;
+/*	 public String pluginDirPath;
+	 public File configFile;
+	 public TortureConfig config;*/
 
 	@Override
 	public void onDisable() {
@@ -31,6 +36,9 @@ public class Torture extends JavaPlugin {
 		PluginDescriptionFile pdfFile = this.getDescription();
 		this.logger.info(pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled.");
 		
+		/*this.pluginDirPath = this.getDataFolder().getAbsolutePath();
+		this.configFile = new File(this.pluginDirPath + File.separator + "config.yml");
+		this.config = new TortureConfig(this.configFile);*/
 	}
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) 
     {
@@ -69,39 +77,6 @@ public class Torture extends JavaPlugin {
 					player.sendMessage(ChatColor.RED + "You do not have the proper permissions to use this command");
 				}
 			}
-		
-			/*if(cmd.getName().equalsIgnoreCase("fireball"))
-			{
-				if(player.hasPermission("torture.fireball")|| player.hasPermission("torture.*"))
-				{
-					if(args.length == 0)
-					{
-						playEffect(player, Effect.BLAZE_SHOOT, 1);
-						player.sendMessage(ChatColor.RED + "You shot a fireball!");
-						return true;
-					}
-					else if(args.length == 1)
-					{
-						if(player.getServer().getPlayer(args [0]) != null)
-						{
-							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							playEffect(player, Effect.GHAST_SHOOT, 1);
-							targetPlayer.sendMessage(ChatColor.RED + "You have shot a fireball!");
-							player.sendMessage(ChatColor.RED + "You shot " + args [0]);
-							return true;
-						}
-						else
-						{
-							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
-						}
-					}
-				
-				else
-				{
-					player.sendMessage(ChatColor.RED + "You do not have the proper permissions to use this command");
-				}
-			}
-		}*/
 			if(cmd.getName().equalsIgnoreCase("hurt"))
 			{
 				if(player.hasPermission("torture.hurt")|| player.hasPermission("torture.*"))
@@ -304,6 +279,22 @@ public class Torture extends JavaPlugin {
 							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
 						}
 					}
+					else if(args.length == 2)
+					{
+						if(player.getServer().getPlayer(args [0]) != null)
+						{
+							int time = Integer.parseInt(args[1]) * 20;
+							Player targetPlayer = player.getServer().getPlayer(args [0]);
+							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(19,time,1));
+							targetPlayer.sendMessage(ChatColor.RED + "You have been poisoned!");
+							player.sendMessage(ChatColor.RED + "You poisoned " + args [0] + ".");
+							return true;
+						}
+						else
+						{
+							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
+						}
+					}
 				}
 				else
 				{
@@ -328,6 +319,23 @@ public class Torture extends JavaPlugin {
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
 							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(2,500,1));
 							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(4,500,1));
+							targetPlayer.sendMessage(ChatColor.RED + "You have been slowed down!");
+							player.sendMessage(ChatColor.RED + "You slowed " + args [0] + "  down.");
+							return true;
+						}
+						else
+						{
+							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
+						}
+					}
+					else if(args.length == 2)
+					{
+						if(player.getServer().getPlayer(args [0]) != null)
+						{
+							int time = Integer.parseInt(args [1]) * 20;
+							Player targetPlayer = player.getServer().getPlayer(args [0]);
+							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(2,time, 1));
+							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(4,time,1));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been slowed down!");
 							player.sendMessage(ChatColor.RED + "You slowed " + args [0] + "  down.");
 							return true;
@@ -368,6 +376,22 @@ public class Torture extends JavaPlugin {
 							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
 						}
 					}
+					else if(args.length == 2)
+					{
+						if(player.getServer().getPlayer(args [0]) != null)
+						{
+							int time = Integer.parseInt(args [1]) * 20;
+							Player targetPlayer = player.getServer().getPlayer(args [0]);
+							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(15,time,1));
+							targetPlayer.sendMessage(ChatColor.RED + "You have been made blind!");
+							player.sendMessage(ChatColor.RED + "You made " + args [0] + " blind.");
+							return true;
+						}
+						else
+						{
+							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
+						}
+					}
 				}
 				else
 				{
@@ -390,6 +414,22 @@ public class Torture extends JavaPlugin {
 						{
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
 							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(17,500,1));
+							targetPlayer.sendMessage(ChatColor.RED + "You have been made hungry!");
+							player.sendMessage(ChatColor.RED + "You made " + args [0] + " hungry.");
+							return true;
+						}
+						else
+						{
+							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
+						}
+					}
+					else if(args.length == 2)
+					{
+						if(player.getServer().getPlayer(args [0]) != null)
+						{
+							int time = Integer.parseInt(args[1]) * 20;
+							Player targetPlayer = player.getServer().getPlayer(args [0]);
+							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(17,time,1));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been made hungry!");
 							player.sendMessage(ChatColor.RED + "You made " + args [0] + " hungry.");
 							return true;
@@ -430,6 +470,23 @@ public class Torture extends JavaPlugin {
 							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
 						}
 					}
+					else if(args.length == 2)
+					{
+						if(player.getServer().getPlayer(args [0]) != null)
+						{
+							int time = Integer.parseInt(args[1]) * 20;
+							Player targetPlayer = player.getServer().getPlayer(args [0]);
+							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(9,time,1));
+							targetPlayer.sendMessage(ChatColor.RED + "You have been made ill!");
+							player.sendMessage(ChatColor.RED + "You made " + args [0] + " ill.");
+							return true;
+						}
+						else
+						{
+							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
+						}
+					}
+					
 				}
 				else
 				{
@@ -458,6 +515,25 @@ public class Torture extends JavaPlugin {
 							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(9,500,1));
 							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(15,500,1));
 							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(17,500,1));
+							targetPlayer.sendMessage(ChatColor.RED + "You have been tortured!");
+							player.sendMessage(ChatColor.RED + "You tortured " + args [0] + ".");
+							return true;
+						}
+						else
+						{
+							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
+						}
+					}
+					else if(args.length == 2)
+					{
+						if(player.getServer().getPlayer(args [0]) != null)
+						{
+							int time = Integer.parseInt(args [1]) * 20;
+							Player targetPlayer = player.getServer().getPlayer(args [0]);
+							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(19,time,1));
+							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(9,time,1));
+							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(15,time,1));
+							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(17,time,1));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been tortured!");
 							player.sendMessage(ChatColor.RED + "You tortured " + args [0] + ".");
 							return true;
