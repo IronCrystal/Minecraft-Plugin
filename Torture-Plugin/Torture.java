@@ -1,5 +1,6 @@
 package me.IronCrystal.Torture;
 
+import java.util.Random;
 import java.util.logging.Logger;
 
 import net.minecraft.server.MobEffect;
@@ -11,12 +12,15 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 
 public class Torture extends JavaPlugin 
 {
@@ -277,8 +281,9 @@ public class Torture extends JavaPlugin
 							sender.sendMessage("/annoy <player> -annoys the player with villagers");
 							sender.sendMessage("/rabid <player> -sends rabid wolves after the player");
 							sender.sendMessage("/suffocate <player> -suffocates the player in a tower of sand");
+							sender.sendMessage("/rainoffire <player> <number> -Drops firey arrows over the player");
 							sender.sendMessage("/torture <player> <time> <1-4> -terrible things will come to pass");
-/*							sender.sendMessage(ChatColor.GREEN + "");
+							/*							sender.sendMessage(ChatColor.GREEN + "");
 							sender.sendMessage(ChatColor.GREEN + "Type /help 5 to see the next page.");*/
 						}
 						return true;
@@ -903,18 +908,14 @@ public class Torture extends JavaPlugin
 						Location Villager7 = new Location(currentWorld, x, y, z + 2);
 						Location Villager8 = new Location(currentWorld, x, y, z - 2);
 
-
-
-
-
-						player.getWorld().spawnCreature(Villager1, CreatureType.VILLAGER);
-						player.getWorld().spawnCreature(Villager2, CreatureType.VILLAGER);
-						player.getWorld().spawnCreature(Villager3, CreatureType.VILLAGER);
-						player.getWorld().spawnCreature(Villager4, CreatureType.VILLAGER);
-						player.getWorld().spawnCreature(Villager5, CreatureType.VILLAGER);
-						player.getWorld().spawnCreature(Villager6, CreatureType.VILLAGER);
-						player.getWorld().spawnCreature(Villager7, CreatureType.VILLAGER);
-						player.getWorld().spawnCreature(Villager8, CreatureType.VILLAGER);
+						Villager v1 = (Villager)player.getWorld().spawnCreature(Villager1, CreatureType.VILLAGER);
+						Villager v2 = (Villager)player.getWorld().spawnCreature(Villager2, CreatureType.VILLAGER);
+						Villager v3 = (Villager)player.getWorld().spawnCreature(Villager3, CreatureType.VILLAGER);
+						Villager v4 = (Villager)player.getWorld().spawnCreature(Villager4, CreatureType.VILLAGER);
+						Villager v5 = (Villager)player.getWorld().spawnCreature(Villager5, CreatureType.VILLAGER);
+						Villager v6 = (Villager)player.getWorld().spawnCreature(Villager6, CreatureType.VILLAGER);
+						Villager v7 = (Villager)player.getWorld().spawnCreature(Villager7, CreatureType.VILLAGER);
+						Villager v8 = (Villager)player.getWorld().spawnCreature(Villager8, CreatureType.VILLAGER);
 
 						player.sendMessage(ChatColor.RED + "You annoyed yourself!");
 						return true;
@@ -941,15 +942,15 @@ public class Torture extends JavaPlugin
 							Location Villager7 = new Location(currentTargetWorld, x, y, z + 2);
 							Location Villager8 = new Location(currentTargetWorld, x, y, z - 2);
 
-							targetPlayer.getWorld().spawnCreature(Villager1, CreatureType.VILLAGER);
-							targetPlayer.getWorld().spawnCreature(Villager2, CreatureType.VILLAGER);
-							targetPlayer.getWorld().spawnCreature(Villager3, CreatureType.VILLAGER);
-							targetPlayer.getWorld().spawnCreature(Villager4, CreatureType.VILLAGER);
-							targetPlayer.getWorld().spawnCreature(Villager5, CreatureType.VILLAGER);
-							targetPlayer.getWorld().spawnCreature(Villager6, CreatureType.VILLAGER);
-							targetPlayer.getWorld().spawnCreature(Villager7, CreatureType.VILLAGER);
-							targetPlayer.getWorld().spawnCreature(Villager8, CreatureType.VILLAGER);
 
+							Villager v1 = (Villager)targetPlayer.getWorld().spawnCreature(Villager1, CreatureType.VILLAGER);
+							Villager v2 = (Villager)targetPlayer.getWorld().spawnCreature(Villager2, CreatureType.VILLAGER);
+							Villager v3 = (Villager)targetPlayer.getWorld().spawnCreature(Villager3, CreatureType.VILLAGER);
+							Villager v4 = (Villager)targetPlayer.getWorld().spawnCreature(Villager4, CreatureType.VILLAGER);
+							Villager v5 = (Villager)targetPlayer.getWorld().spawnCreature(Villager5, CreatureType.VILLAGER);
+							Villager v6 = (Villager)targetPlayer.getWorld().spawnCreature(Villager6, CreatureType.VILLAGER);
+							Villager v7 = (Villager)targetPlayer.getWorld().spawnCreature(Villager7, CreatureType.VILLAGER);
+							Villager v8 = (Villager)targetPlayer.getWorld().spawnCreature(Villager8, CreatureType.VILLAGER);
 
 							targetPlayer.sendMessage(ChatColor.RED + "You have been annoyed!");
 							player.sendMessage(ChatColor.RED + "You annoyed " + args [0] + " with villagers!");
@@ -981,16 +982,19 @@ public class Torture extends JavaPlugin
 						Location Wolf1 = new Location(currentWorld, x + 5, y, z);
 						Location Wolf2 = new Location(currentWorld, x + 5, y, z - 1);
 						Location Wolf3 = new Location(currentWorld, x + 5, y, z + 1);
-						
+
 						Wolf w1 = (Wolf)player.getWorld().spawnCreature(Wolf1, CreatureType.WOLF);
 						Wolf w2 = (Wolf)player.getWorld().spawnCreature(Wolf2, CreatureType.WOLF);
 						Wolf w3 = (Wolf)player.getWorld().spawnCreature(Wolf3, CreatureType.WOLF);
-						
+						player.sendMessage(ChatColor.RED + "You are being chased by rabid wolves!");
+
 						w1.setAngry(true);
 						w2.setAngry(true);
 						w3.setAngry(true);
+						w1.setTarget(player);
+						w2.setTarget(player);
+						w3.setTarget(player);
 
-						player.sendMessage(ChatColor.RED + "You are being chased by rabid wolves!");
 						return true;
 					}
 					else if(args.length == 1)
@@ -1009,17 +1013,21 @@ public class Torture extends JavaPlugin
 							Location Wolf1 = new Location(currentTargetWorld, x + 5, y, z - 1);
 							Location Wolf2 = new Location(currentTargetWorld, x + 5, y, z);
 							Location Wolf3 = new Location(currentTargetWorld, x + 5, y, z + 1);
-							
+
 							Wolf w1 = (Wolf)targetPlayer.getWorld().spawnCreature(Wolf1, CreatureType.WOLF);
 							Wolf w2 = (Wolf)targetPlayer.getWorld().spawnCreature(Wolf2, CreatureType.WOLF);
 							Wolf w3 = (Wolf)targetPlayer.getWorld().spawnCreature(Wolf3, CreatureType.WOLF);
-							
+
 							w1.setAngry(true);
 							w2.setAngry(true);
 							w3.setAngry(true);
+							w1.setTarget(targetPlayer);
+							w2.setTarget(targetPlayer);
+							w3.setTarget(targetPlayer);
 
 							targetPlayer.sendMessage(ChatColor.RED + "You are being chased by rabid wolves!");
 							player.sendMessage(ChatColor.RED + "You spawned rabid wolves near " + args [0] + "!");
+
 							return true;
 						}
 						else
@@ -1137,7 +1145,7 @@ public class Torture extends JavaPlugin
 							Sand.getBlock().setType(Material.SAND);
 							count1++;
 						}
-						
+
 						player.sendMessage(ChatColor.RED + "You suffocated!");
 						return true;
 					}
@@ -1245,8 +1253,8 @@ public class Torture extends JavaPlugin
 								Sand.getBlock().setType(Material.SAND);
 								count1++;
 							}
-							
-							player.sendMessage(ChatColor.RED + "You suffocated!");
+
+							player.sendMessage(ChatColor.RED + "You suffocated " + args [0] + "!");
 							return true;
 						}
 						else
@@ -1260,52 +1268,97 @@ public class Torture extends JavaPlugin
 					player.sendMessage(ChatColor.RED + "You do not have the proper permissions to use this command");
 				}
 			}
-		/*	if(cmd.getName().equalsIgnoreCase("giant"))
+			else if (cmd.getName().equalsIgnoreCase("rainoffire"))
 			{
-				if(player.hasPermission("torture.giant")|| player.hasPermission("torture.*"))
+				if (player.hasPermission("torture.rainoffire") || player.hasPermission("torture.*"))
 				{
+					final Random rg = new Random();
 					if(args.length == 0)
 					{
-						Location blockLocation = player.getLocation();
-						double y = blockLocation.getBlockY();
-						double x = blockLocation.getBlockX();
-						double z = blockLocation.getBlockZ();
-						World currentWorld = ((Player) sender).getPlayer().getWorld();
+						Location playerLocation = player.getLocation();
+						double x = playerLocation.getBlockX();
+						double y = playerLocation.getBlockY();
+						double z = playerLocation.getBlockZ();
 
-						Location playerLocation = new Location(currentWorld, x + 5, y, z);
-						player.getWorld().spawnCreature(playerLocation, CreatureType.GIANT);
-						player.sendMessage(ChatColor.RED + "You spawned a giant!");
-						return true;
+						World currentWorld = player.getPlayer().getWorld();
+
+						Location loc = new Location(currentWorld, x, y, z);
+						loc.setY(loc.getY() + 15);
+						loc.setX( loc.getX() + (rg.nextInt((2*5)+1)-5) );
+						loc.setZ( loc.getZ() + (rg.nextInt((2*5)+1)-5) );
+						loc.setPitch(-90);
+						Vector vec = new Vector(0, -1, 0);
+						Arrow arrow = player.getWorld().spawnArrow(loc, vec, 0.6f, 12f);
+						arrow.setFireTicks(500);
+						player.sendMessage(ChatColor.RED + "You were shot at!");
 					}
-					else if(args.length == 1)
+					else if (args.length == 1)
 					{
 						if(player.getServer().getPlayer(args [0]) != null)
 						{
-							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							Location blockLocation = targetPlayer.getLocation();
-							double y = blockLocation.getBlockY();
-							double x = blockLocation.getBlockX();
-							double z = blockLocation.getBlockZ();
+							Player TargetPlayer = player.getServer().getPlayer(args [0]);
 
-							World currentTargetWorld = targetPlayer.getWorld();
-							Location targetPlayerLocation = new Location(currentTargetWorld, x + 5, y, z);
-							targetPlayer.getWorld().spawnCreature(targetPlayerLocation, CreatureType.GIANT);
+							Location playerLocation = TargetPlayer.getLocation();
+							double x = playerLocation.getBlockX();
+							double y = playerLocation.getBlockY();
+							double z = playerLocation.getBlockZ();
 
-							targetPlayer.sendMessage(ChatColor.RED + "A giant has spawned near you!");
-							player.sendMessage(ChatColor.RED + "You spawned a giant near " + args [0] + "!");
-							return true;
+							World currentWorld = player.getPlayer().getWorld();
+
+							Location loc = new Location(currentWorld, x, y, z);
+							loc.setY(loc.getY() + 15);
+							loc.setX( loc.getX() + (rg.nextInt((2*5)+1)-5) );
+							loc.setZ( loc.getZ() + (rg.nextInt((2*5)+1)-5) );
+							loc.setPitch(-90);
+							Vector vec = new Vector(0, -1, 0);
+							Arrow arrow = player.getWorld().spawnArrow(loc, vec, 0.6f, 12f);
+							arrow.setFireTicks(500);
+							player.sendMessage(ChatColor.RED + "You rained fire down upon " + args [0]);
+							TargetPlayer.sendMessage("Fire has been rained upon you!");
 						}
 						else
-						{
 							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
+					}
+					else if (args.length == 2)
+					{
+						int number = Integer.parseInt(args [1]);
+						if(player.getServer().getPlayer(args [0]) != null)
+						{
+							Player TargetPlayer = player.getServer().getPlayer(args [0]);
+
+							Location playerLocation = TargetPlayer.getLocation();
+							double x = playerLocation.getBlockX();
+							double y = playerLocation.getBlockY();
+							double z = playerLocation.getBlockZ();
+
+							if(number > 121)
+							{
+								player.sendMessage(ChatColor.RED + "Too many arrows!");
+								player.sendMessage(ChatColor.RED + "You can not use more than 121 arrows!");
+								return true;
+							}
+							World currentWorld = player.getPlayer().getWorld();
+							for(int i = 0; i < number; i++)
+							{
+								Location loc = new Location(currentWorld, x, y, z);
+								loc.setY(loc.getY() + 15);
+								loc.setX( loc.getX() + (rg.nextInt((2*5)+1)-5) );
+								loc.setZ( loc.getZ() + (rg.nextInt((2*5)+1)-5) );
+								loc.setPitch(-90);
+								Vector vec = new Vector(0, -1, 0);
+								Arrow arrow = player.getWorld().spawnArrow(loc, vec, 0.6f, 12f);
+								arrow.setFireTicks(500);
+							}
+							player.sendMessage(ChatColor.RED + "You rained fire down upon " + args [0]);
+							TargetPlayer.sendMessage("Fire has been rained upon you!");
 						}
+						else
+							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
 					}
 				}
 				else
-				{
 					player.sendMessage(ChatColor.RED + "You do not have the proper permissions to use this command");
-				}
-			}*/
+			}
 		}
 		return false;
 	}
