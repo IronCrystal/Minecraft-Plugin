@@ -3,23 +3,26 @@ package me.IronCrystal.Torture;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import net.minecraft.server.MobEffect;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Spider;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
+import org.bukkit.entity.Zombie;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 public class Torture extends JavaPlugin 
@@ -39,7 +42,7 @@ public class Torture extends JavaPlugin
 	public void onEnable()
 	{
 		PluginDescriptionFile pdfFile = this.getDescription();
-		this.logger.info(pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled.");
+		this.logger.info(pdfFile.getName() + " version " + pdfFile.getVersion() + " has been enabled.");
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
@@ -278,13 +281,23 @@ public class Torture extends JavaPlugin
 						}
 						else if (page == 4)
 						{
-							sender.sendMessage("/annoy <player> -annoys the player with villagers");
-							sender.sendMessage("/rabid <player> -sends rabid wolves after the player");
-							sender.sendMessage("/suffocate <player> -suffocates the player in a tower of sand");
-							sender.sendMessage("/rainoffire <player> <number> -Drops firey arrows over the player");
-							sender.sendMessage("/torture <player> <time> <1-4> -terrible things will come to pass");
-							/*							sender.sendMessage(ChatColor.GREEN + "");
-							sender.sendMessage(ChatColor.GREEN + "Type /help 5 to see the next page.");*/
+							sender.sendMessage(ChatColor.GREEN + "/annoy <player> -annoys the player with villagers");
+							sender.sendMessage(ChatColor.GREEN + "/rabid <player> -sends rabid wolves after the player");
+							sender.sendMessage(ChatColor.GREEN + "/suffocate <player> -suffocates the player in a tower of sand");
+							sender.sendMessage(ChatColor.GREEN + "/rainoffire <player> <number> -Drops firey arrows over the player");
+							sender.sendMessage(ChatColor.GREEN + "/torture <player> <time> <1-4> -terrible things will come to pass");
+							sender.sendMessage(ChatColor.GREEN + "");
+							sender.sendMessage(ChatColor.GREEN + "Type /help 5 to see the next page.");
+						}
+						else if (page == 5)
+						{
+							sender.sendMessage(ChatColor.GREEN + "/spider <player> -spawns spiders all around the player");
+							sender.sendMessage(ChatColor.GREEN + "/zombie <player> -spawns zombies all around the player");
+							sender.sendMessage(ChatColor.GREEN + "/skeleton <player> -spawns skeletons all around the player");
+							sender.sendMessage(ChatColor.GREEN + "/tstop <player> -stops all effects currently on the player");
+							/*sender.sendMessage(ChatColor.GREEN + "");
+							sender.sendMessage(ChatColor.GREEN + "");
+							sender.sendMessage(ChatColor.GREEN + "Type /help 6 to see the next page.");*/
 						}
 						return true;
 					}
@@ -300,7 +313,7 @@ public class Torture extends JavaPlugin
 				{
 					if(args.length == 0)
 					{
-						((CraftPlayer)player).getHandle().addEffect( new MobEffect(19, 500, 0));
+						player.addPotionEffect(new PotionEffect (PotionEffectType.POISON, 500, 0));
 						player.sendMessage(ChatColor.RED + "You are poisoned!");
 						return true;
 					}
@@ -309,7 +322,7 @@ public class Torture extends JavaPlugin
 						if(player.getServer().getPlayer(args [0]) != null)
 						{
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(19,500,0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.POISON, 500, 0));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been poisoned!");
 							player.sendMessage(ChatColor.RED + "You poisoned " + args [0] + ".");
 							return true;
@@ -325,7 +338,7 @@ public class Torture extends JavaPlugin
 						{
 							int time = Integer.parseInt(args[1]) * 20;
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(19,time,0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.POISON, time, 0));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been poisoned!");
 							player.sendMessage(ChatColor.RED + "You poisoned " + args [0] + ".");
 							return true;
@@ -342,7 +355,7 @@ public class Torture extends JavaPlugin
 							int strength = Integer.parseInt(args[2]) - 1;
 							int time = Integer.parseInt(args[1]) * 20;
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(19, time, strength));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.POISON, time, strength));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been poisoned!");
 							player.sendMessage(ChatColor.RED + "You poisoned " + args [0] + ".");
 							return true;
@@ -364,8 +377,8 @@ public class Torture extends JavaPlugin
 				{
 					if(args.length == 0)
 					{
-						((CraftPlayer)player).getHandle().addEffect(new MobEffect(2,500,0));
-						((CraftPlayer)player).getHandle().addEffect(new MobEffect(4,500,0));
+						player.addPotionEffect(new PotionEffect (PotionEffectType.SLOW, 500, 0));
+						player.addPotionEffect(new PotionEffect (PotionEffectType.SLOW_DIGGING, 500, 0));
 						player.sendMessage(ChatColor.RED + "You have been slowed down!");
 						return true;
 					}
@@ -374,8 +387,8 @@ public class Torture extends JavaPlugin
 						if(player.getServer().getPlayer(args [0]) != null)
 						{
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(2,500,0));
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(4,500,0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.SLOW, 500, 0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.SLOW_DIGGING, 500, 0));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been slowed down!");
 							player.sendMessage(ChatColor.RED + "You slowed " + args [0] + " down.");
 							return true;
@@ -391,8 +404,8 @@ public class Torture extends JavaPlugin
 						{
 							int time = Integer.parseInt(args [1]) * 20;
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(2,time, 0));
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(4,time,0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.SLOW, time, 0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.SLOW_DIGGING, time, 0));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been slowed down!");
 							player.sendMessage(ChatColor.RED + "You slowed " + args [0] + " down.");
 							return true;
@@ -409,8 +422,8 @@ public class Torture extends JavaPlugin
 							int strength = Integer.parseInt(args [2]);
 							int time = Integer.parseInt(args [1]) * 20;
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(2, time, strength));
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(4, time, strength));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.SLOW, time, strength));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.SLOW_DIGGING, time, strength));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been slowed down!");
 							player.sendMessage(ChatColor.RED + "You slowed " + args [0] + " down.");
 							return true;
@@ -432,7 +445,7 @@ public class Torture extends JavaPlugin
 				{
 					if(args.length == 0)
 					{
-						((CraftPlayer)player).getHandle().addEffect(new MobEffect(2, 500, 15));
+						player.addPotionEffect(new PotionEffect (PotionEffectType.SLOW, 500, 15));
 						player.sendMessage(ChatColor.RED + "Your world has been turn upside down!");
 						return true;
 					}
@@ -441,7 +454,7 @@ public class Torture extends JavaPlugin
 						if(player.getServer().getPlayer(args [0]) != null)
 						{
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(2, 500, 15));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.SLOW, 500, 15));
 							targetPlayer.sendMessage(ChatColor.RED + "Your world has been turned upside down!");
 							player.sendMessage(ChatColor.RED + "You turned " + args [0] + "'s world upside down!");
 							return true;
@@ -457,7 +470,7 @@ public class Torture extends JavaPlugin
 						{
 							int time = Integer.parseInt(args [1]) * 20;
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(2, time, 15));
+							player.addPotionEffect(new PotionEffect (PotionEffectType.SLOW, time, 15));
 							targetPlayer.sendMessage(ChatColor.RED + "Your world has been turned upside down!");
 							player.sendMessage(ChatColor.RED + "You turned " + args [0] + "'s world upside down!");
 							return true;
@@ -479,7 +492,7 @@ public class Torture extends JavaPlugin
 				{
 					if(args.length == 0)
 					{
-						((CraftPlayer)player).getHandle().addEffect(new MobEffect(15,500,0));
+						player.addPotionEffect(new PotionEffect (PotionEffectType.BLINDNESS, 500, 0));
 						player.sendMessage(ChatColor.RED + "You are blind!");
 						return true;
 					}
@@ -488,7 +501,7 @@ public class Torture extends JavaPlugin
 						if(player.getServer().getPlayer(args [0]) != null)
 						{
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(15,500,0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.BLINDNESS, 500, 0));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been made blind!");
 							player.sendMessage(ChatColor.RED + "You made " + args [0] + " blind.");
 							return true;
@@ -504,7 +517,7 @@ public class Torture extends JavaPlugin
 						{
 							int time = Integer.parseInt(args [1]) * 20;
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(15,time,0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.BLINDNESS, time, 0));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been made blind!");
 							player.sendMessage(ChatColor.RED + "You made " + args [0] + " blind.");
 							return true;
@@ -526,7 +539,7 @@ public class Torture extends JavaPlugin
 				{
 					if(args.length == 0)
 					{
-						((CraftPlayer)player).getHandle().addEffect(new MobEffect(17, 500, 0));
+						player.addPotionEffect(new PotionEffect (PotionEffectType.HUNGER, 500, 0));
 						player.sendMessage(ChatColor.RED + "You are hungry!");
 						return true;
 					}
@@ -535,7 +548,7 @@ public class Torture extends JavaPlugin
 						if(player.getServer().getPlayer(args [0]) != null)
 						{
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(17,500,0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.HUNGER, 500, 0));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been made hungry!");
 							player.sendMessage(ChatColor.RED + "You made " + args [0] + " hungry.");
 							return true;
@@ -551,7 +564,7 @@ public class Torture extends JavaPlugin
 						{
 							int time = Integer.parseInt(args[1]) * 20;
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(17,time,0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.HUNGER, time, 0));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been made hungry!");
 							player.sendMessage(ChatColor.RED + "You made " + args [0] + " hungry.");
 							return true;
@@ -568,7 +581,7 @@ public class Torture extends JavaPlugin
 							int strength = Integer.parseInt(args [2]) - 1;
 							int time = Integer.parseInt(args[1]) * 20;
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(17,time,strength));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.HUNGER, time, strength));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been made hungry!");
 							player.sendMessage(ChatColor.RED + "You made " + args [0] + " hungry.");
 							return true;
@@ -590,7 +603,7 @@ public class Torture extends JavaPlugin
 				{
 					if(args.length == 0)
 					{
-						((CraftPlayer)player).getHandle().addEffect(new MobEffect(9,500,0));
+						player.addPotionEffect(new PotionEffect (PotionEffectType.CONFUSION, 500, 0));
 						player.sendMessage(ChatColor.RED + "You are ill!");
 						return true;
 					}
@@ -599,7 +612,7 @@ public class Torture extends JavaPlugin
 						if(player.getServer().getPlayer(args [0]) != null)
 						{
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(9,500,0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.CONFUSION, 500, 0));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been made ill!");
 							player.sendMessage(ChatColor.RED + "You made " + args [0] + " ill.");
 							return true;
@@ -615,7 +628,7 @@ public class Torture extends JavaPlugin
 						{
 							int time = Integer.parseInt(args[1]) * 20;
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(9,time,0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.CONFUSION, time, 0));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been made ill!");
 							player.sendMessage(ChatColor.RED + "You made " + args [0] + " ill.");
 							return true;
@@ -638,10 +651,10 @@ public class Torture extends JavaPlugin
 				{
 					if(args.length == 0)
 					{
-						((CraftPlayer)player).getHandle().addEffect(new MobEffect(19,500,0));
-						((CraftPlayer)player).getHandle().addEffect(new MobEffect(9,500,0));
-						((CraftPlayer)player).getHandle().addEffect(new MobEffect(15,500,0));
-						((CraftPlayer)player).getHandle().addEffect(new MobEffect(17,500,0));
+						player.addPotionEffect(new PotionEffect (PotionEffectType.POISON, 500, 0));
+						player.addPotionEffect(new PotionEffect (PotionEffectType.CONFUSION, 500, 0));
+						player.addPotionEffect(new PotionEffect (PotionEffectType.BLINDNESS, 500, 0));
+						player.addPotionEffect(new PotionEffect (PotionEffectType.HUNGER, 500, 0));
 						player.sendMessage(ChatColor.RED + "You have been tortured!");
 						return true;
 					}
@@ -650,10 +663,10 @@ public class Torture extends JavaPlugin
 						if(player.getServer().getPlayer(args [0]) != null)
 						{
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(19,500,0));
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(9,500,0));
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(15,500,0));
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(17,500,0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.POISON, 500, 0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.CONFUSION, 500, 0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.BLINDNESS, 500, 0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.HUNGER, 500, 0));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been tortured!");
 							player.sendMessage(ChatColor.RED + "You tortured " + args [0] + ".");
 							return true;
@@ -669,10 +682,10 @@ public class Torture extends JavaPlugin
 						{
 							int time = Integer.parseInt(args [1]) * 20;
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(19,time,0));
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(9,time,0));
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(15,time,0));
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(17,time,0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.POISON, time, 0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.CONFUSION, time, 0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.BLINDNESS, time, 0));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.HUNGER, time, 0));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been tortured!");
 							player.sendMessage(ChatColor.RED + "You tortured " + args [0] + ".");
 							return true;
@@ -689,10 +702,10 @@ public class Torture extends JavaPlugin
 							int strength = Integer.parseInt(args [2]) - 1;
 							int time = Integer.parseInt(args [1]) * 20;
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(19, time, strength));
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(9, time, strength));
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(15, time, strength));
-							((CraftPlayer)targetPlayer).getHandle().addEffect(new MobEffect(17, time, strength));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.POISON, time, strength));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.CONFUSION, time, strength));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.BLINDNESS, time, strength));
+							targetPlayer.addPotionEffect(new PotionEffect (PotionEffectType.HUNGER, time, strength));
 							targetPlayer.sendMessage(ChatColor.RED + "You have been tortured!");
 							player.sendMessage(ChatColor.RED + "You tortured " + args [0] + ".");
 							return true;
@@ -717,8 +730,6 @@ public class Torture extends JavaPlugin
 						float explosionPower = 0F;
 						player.getWorld().createExplosion(player.getLocation(), explosionPower);
 						player.setHealth(0);
-
-
 						player.sendMessage(ChatColor.RED + "You have exploded!");
 						return true;
 					}
@@ -753,14 +764,14 @@ public class Torture extends JavaPlugin
 
 					if(args.length == 0)
 					{
-						Location blockLocation = player.getLocation();
-						double y = blockLocation.getBlockY();
-						double x = blockLocation.getBlockX();
-						double z = blockLocation.getBlockZ();
+						Location playerLocation = player.getLocation();
+						double y = playerLocation.getBlockY();
+						double x = playerLocation.getBlockX();
+						double z = playerLocation.getBlockZ();
 						World currentWorld = ((Player) sender).getPlayer().getWorld();
 
-						Location playerLocation = new Location(currentWorld, x, y + 13, z);
-						player.teleport(playerLocation);
+						Location NewPlayerLocation = new Location(currentWorld, x, y + 13, z);
+						player.teleport(NewPlayerLocation);
 						player.sendMessage(ChatColor.RED + "You have fallen!");
 						return true;
 					}
@@ -770,15 +781,15 @@ public class Torture extends JavaPlugin
 						{
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
 
-							Location blockLocation = targetPlayer.getLocation();
-							double y = blockLocation.getBlockY();
-							double x = blockLocation.getBlockX();
-							double z = blockLocation.getBlockZ();
+							Location playerLocation = targetPlayer.getLocation();
+							double y = playerLocation.getBlockY();
+							double x = playerLocation.getBlockX();
+							double z = playerLocation.getBlockZ();
 
 							World currentTargetWorld = targetPlayer.getWorld();
 
 							Location targetPlayerLocation = new Location(currentTargetWorld, x, y + 13, z);
-							((Player)targetPlayer).teleport(targetPlayerLocation);
+							targetPlayer.teleport(targetPlayerLocation);
 
 
 							targetPlayer.sendMessage(ChatColor.RED + "You have fallen!");
@@ -797,15 +808,15 @@ public class Torture extends JavaPlugin
 							int distance = Integer.parseInt(args [1]);
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
 
-							Location blockLocation = targetPlayer.getLocation();
-							double y = blockLocation.getBlockY();
-							double x = blockLocation.getBlockX();
-							double z = blockLocation.getBlockZ();
+							Location playerLocation = targetPlayer.getLocation();
+							double y = playerLocation.getBlockY();
+							double x = playerLocation.getBlockX();
+							double z = playerLocation.getBlockZ();
 
 							World currentTargetWorld = targetPlayer.getWorld();
 
 							Location targetPlayerLocation = new Location(currentTargetWorld, x, y + distance, z);
-							((Player)targetPlayer).teleport(targetPlayerLocation);
+							targetPlayer.teleport(targetPlayerLocation);
 
 
 							targetPlayer.sendMessage(ChatColor.RED + "You have fallen!");
@@ -829,10 +840,10 @@ public class Torture extends JavaPlugin
 				{
 					if(args.length == 0)
 					{
-						Location blockLocation = player.getLocation();
-						double y = blockLocation.getBlockY();
-						double x = blockLocation.getBlockX();
-						double z = blockLocation.getBlockZ();
+						Location playerLocation = player.getLocation();
+						double y = playerLocation.getBlockY();
+						double x = playerLocation.getBlockX();
+						double z = playerLocation.getBlockZ();
 						World currentWorld = ((Player) sender).getPlayer().getWorld();
 
 						Location Creeper1 = new Location(currentWorld, x + 1, y, z);
@@ -840,10 +851,10 @@ public class Torture extends JavaPlugin
 						Location Creeper3 = new Location(currentWorld, x, y, z + 1);
 						Location Creeper4 = new Location(currentWorld, x, y, z - 1);
 
-						player.getWorld().spawnCreature(Creeper1, CreatureType.CREEPER);
-						player.getWorld().spawnCreature(Creeper2, CreatureType.CREEPER);
-						player.getWorld().spawnCreature(Creeper3, CreatureType.CREEPER);
-						player.getWorld().spawnCreature(Creeper4, CreatureType.CREEPER);
+						Creeper c1 = (Creeper)player.getWorld().spawnCreature(Creeper1, CreatureType.CREEPER);
+						Creeper c2 = (Creeper)player.getWorld().spawnCreature(Creeper2, CreatureType.CREEPER);
+						Creeper c3 = (Creeper)player.getWorld().spawnCreature(Creeper3, CreatureType.CREEPER);
+						Creeper c4 = (Creeper)player.getWorld().spawnCreature(Creeper4, CreatureType.CREEPER);
 
 						player.sendMessage(ChatColor.RED + "You spawned creepers around yourself!");
 						return true;
@@ -854,10 +865,10 @@ public class Torture extends JavaPlugin
 						{
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
 
-							Location blockLocation = targetPlayer.getLocation();
-							double y = blockLocation.getBlockY();
-							double x = blockLocation.getBlockX();
-							double z = blockLocation.getBlockZ();
+							Location playerLocation = targetPlayer.getLocation();
+							double y = playerLocation.getBlockY();
+							double x = playerLocation.getBlockX();
+							double z = playerLocation.getBlockZ();
 
 							World currentTargetWorld = targetPlayer.getWorld();
 
@@ -866,11 +877,10 @@ public class Torture extends JavaPlugin
 							Location Creeper3 = new Location(currentTargetWorld, x, y, z + 1);
 							Location Creeper4 = new Location(currentTargetWorld, x, y, z - 1);
 
-							targetPlayer.getWorld().spawnCreature(Creeper1, CreatureType.CREEPER);
-							targetPlayer.getWorld().spawnCreature(Creeper2, CreatureType.CREEPER);
-							targetPlayer.getWorld().spawnCreature(Creeper3, CreatureType.CREEPER);
-							targetPlayer.getWorld().spawnCreature(Creeper4, CreatureType.CREEPER);
-
+							Creeper c1 = (Creeper)player.getWorld().spawnCreature(Creeper1, CreatureType.CREEPER);
+							Creeper c2 = (Creeper)player.getWorld().spawnCreature(Creeper2, CreatureType.CREEPER);
+							Creeper c3 = (Creeper)player.getWorld().spawnCreature(Creeper3, CreatureType.CREEPER);
+							Creeper c4 = (Creeper)player.getWorld().spawnCreature(Creeper4, CreatureType.CREEPER);
 
 							targetPlayer.sendMessage(ChatColor.RED + "Creepers have spawned near you!");
 							player.sendMessage(ChatColor.RED + "You spawned creepers near " + args [0] + "!");
@@ -893,10 +903,10 @@ public class Torture extends JavaPlugin
 				{
 					if(args.length == 0)
 					{
-						Location blockLocation = player.getLocation();
-						double y = blockLocation.getBlockY();
-						double x = blockLocation.getBlockX();
-						double z = blockLocation.getBlockZ();
+						Location playerLocation = player.getLocation();
+						double y = playerLocation.getBlockY();
+						double x = playerLocation.getBlockX();
+						double z = playerLocation.getBlockZ();
 						World currentWorld = ((Player) sender).getPlayer().getWorld();
 
 						Location Villager1 = new Location(currentWorld, x + 1, y, z);
@@ -917,6 +927,15 @@ public class Torture extends JavaPlugin
 						Villager v7 = (Villager)player.getWorld().spawnCreature(Villager7, CreatureType.VILLAGER);
 						Villager v8 = (Villager)player.getWorld().spawnCreature(Villager8, CreatureType.VILLAGER);
 
+						v1.setTarget(player);
+						v2.setTarget(player);
+						v3.setTarget(player);
+						v4.setTarget(player);
+						v5.setTarget(player);
+						v6.setTarget(player);
+						v7.setTarget(player);
+						v8.setTarget(player);
+
 						player.sendMessage(ChatColor.RED + "You annoyed yourself!");
 						return true;
 					}
@@ -926,10 +945,10 @@ public class Torture extends JavaPlugin
 						{
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
 
-							Location blockLocation = targetPlayer.getLocation();
-							double y = blockLocation.getBlockY();
-							double x = blockLocation.getBlockX();
-							double z = blockLocation.getBlockZ();
+							Location playerLocation = targetPlayer.getLocation();
+							double y = playerLocation.getBlockY();
+							double x = playerLocation.getBlockX();
+							double z = playerLocation.getBlockZ();
 
 							World currentTargetWorld = targetPlayer.getWorld();
 
@@ -973,10 +992,10 @@ public class Torture extends JavaPlugin
 				{
 					if(args.length == 0)
 					{
-						Location blockLocation = player.getLocation();
-						double y = blockLocation.getBlockY();
-						double x = blockLocation.getBlockX();
-						double z = blockLocation.getBlockZ();
+						Location playerLocation = player.getLocation();
+						double y = playerLocation.getBlockY();
+						double x = playerLocation.getBlockX();
+						double z = playerLocation.getBlockZ();
 						World currentWorld = ((Player) sender).getPlayer().getWorld();
 
 						Location Wolf1 = new Location(currentWorld, x + 5, y, z);
@@ -1003,10 +1022,10 @@ public class Torture extends JavaPlugin
 						{
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
 
-							Location blockLocation = targetPlayer.getLocation();
-							double y = blockLocation.getBlockY();
-							double x = blockLocation.getBlockX();
-							double z = blockLocation.getBlockZ();
+							Location playerLocation = targetPlayer.getLocation();
+							double y = playerLocation.getBlockY();
+							double x = playerLocation.getBlockX();
+							double z = playerLocation.getBlockZ();
 
 							World currentTargetWorld = targetPlayer.getWorld();
 
@@ -1047,10 +1066,10 @@ public class Torture extends JavaPlugin
 				{
 					if(args.length == 0)
 					{						
-						Location blockLocation = player.getLocation();
-						double y = blockLocation.getBlockY();
-						double x = blockLocation.getBlockX();
-						double z = blockLocation.getBlockZ();
+						Location playerLocation = player.getLocation();
+						double y = playerLocation.getBlockY();
+						double x = playerLocation.getBlockX();
+						double z = playerLocation.getBlockZ();
 						World currentWorld = ((Player) sender).getPlayer().getWorld();
 
 						int count1 = 0;
@@ -1155,10 +1174,10 @@ public class Torture extends JavaPlugin
 						{
 							Player targetPlayer = player.getServer().getPlayer(args [0]);
 
-							Location blockLocation = targetPlayer.getLocation();
-							double y = blockLocation.getBlockY();
-							double x = blockLocation.getBlockX();
-							double z = blockLocation.getBlockZ();
+							Location playerLocation = targetPlayer.getLocation();
+							double y = playerLocation.getBlockY();
+							double x = playerLocation.getBlockX();
+							double z = playerLocation.getBlockZ();
 							World currentWorld = (targetPlayer).getPlayer().getWorld();
 
 							int count1 = 0;
@@ -1358,6 +1377,306 @@ public class Torture extends JavaPlugin
 				}
 				else
 					player.sendMessage(ChatColor.RED + "You do not have the proper permissions to use this command");
+			}
+			if(cmd.getName().equalsIgnoreCase("spider"))
+			{
+				if(player.hasPermission("torture.spider")|| player.hasPermission("torture.*"))
+				{
+					if(args.length == 0)
+					{
+						Location playerLocation = player.getLocation();
+						double y = playerLocation.getBlockY();
+						double x = playerLocation.getBlockX();
+						double z = playerLocation.getBlockZ();
+						World currentWorld = ((Player) sender).getPlayer().getWorld();
+
+						Location Spider1 = new Location(currentWorld, x + 2, y, z);
+						Location Spider2 = new Location(currentWorld, x - 2, y, z);
+						Location Spider3 = new Location(currentWorld, x, y, z + 2);
+						Location Spider4 = new Location(currentWorld, x, y, z - 2);
+
+						Spider s1 = (Spider)player.getWorld().spawnCreature(Spider1, CreatureType.SPIDER);
+						Spider s2 = (Spider)player.getWorld().spawnCreature(Spider2, CreatureType.SPIDER);
+						Spider s3 = (Spider)player.getWorld().spawnCreature(Spider3, CreatureType.SPIDER);
+						Spider s4 = (Spider)player.getWorld().spawnCreature(Spider4, CreatureType.SPIDER);
+
+						s1.setTarget(player);
+						s2.setTarget(player);
+						s3.setTarget(player);
+						s4.setTarget(player);
+
+						player.sendMessage(ChatColor.RED + "You spawned spiders around yourself!");
+						return true;
+					}
+					else if(args.length == 1)
+					{
+						if(player.getServer().getPlayer(args [0]) != null)
+						{
+							Player targetPlayer = player.getServer().getPlayer(args [0]);
+
+							Location playerLocation = targetPlayer.getLocation();
+							double y = playerLocation.getBlockY();
+							double x = playerLocation.getBlockX();
+							double z = playerLocation.getBlockZ();
+
+							World currentTargetWorld = targetPlayer.getWorld();
+
+							Location Spider1 = new Location(currentTargetWorld, x + 2, y, z);
+							Location Spider2 = new Location(currentTargetWorld, x - 2, y, z);
+							Location Spider3 = new Location(currentTargetWorld, x, y, z + 2);
+							Location Spider4 = new Location(currentTargetWorld, x, y, z - 2);
+
+							Spider s1 = (Spider)targetPlayer.getWorld().spawnCreature(Spider1, CreatureType.SPIDER);
+							Spider s2 = (Spider)targetPlayer.getWorld().spawnCreature(Spider2, CreatureType.SPIDER);
+							Spider s3 = (Spider)targetPlayer.getWorld().spawnCreature(Spider3, CreatureType.SPIDER);
+							Spider s4 = (Spider)targetPlayer.getWorld().spawnCreature(Spider4, CreatureType.SPIDER);
+
+							s1.setTarget(targetPlayer);
+							s2.setTarget(targetPlayer);
+							s3.setTarget(targetPlayer);
+							s4.setTarget(targetPlayer);
+
+							targetPlayer.sendMessage(ChatColor.RED + "Spiders have spawned near you!");
+							player.sendMessage(ChatColor.RED + "You spawned spiders near " + args [0] + "!");
+							return true;
+						}
+						else
+						{
+							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
+						}
+					}
+				}
+				else
+				{
+					player.sendMessage(ChatColor.RED + "You do not have the proper permissions to use this command");
+				}
+			}
+			if(cmd.getName().equalsIgnoreCase("skeleton"))
+			{
+				if(player.hasPermission("torture.skeleton")|| player.hasPermission("torture.*"))
+				{
+					if(args.length == 0)
+					{
+						Location playerLocation = player.getLocation();
+						double y = playerLocation.getBlockY();
+						double x = playerLocation.getBlockX();
+						double z = playerLocation.getBlockZ();
+						World currentWorld = ((Player) sender).getPlayer().getWorld();
+
+						Location Skeleton1 = new Location(currentWorld, x + 2, y, z);
+						Location Skeleton2 = new Location(currentWorld, x - 2, y, z);
+						Location Skeleton3 = new Location(currentWorld, x, y, z + 2);
+						Location Skeleton4 = new Location(currentWorld, x, y, z - 2);
+
+						Skeleton s1 = (Skeleton)player.getWorld().spawnCreature(Skeleton1, CreatureType.SKELETON);
+						Skeleton s2 = (Skeleton)player.getWorld().spawnCreature(Skeleton2, CreatureType.SKELETON);
+						Skeleton s3 = (Skeleton)player.getWorld().spawnCreature(Skeleton3, CreatureType.SKELETON);
+						Skeleton s4 = (Skeleton)player.getWorld().spawnCreature(Skeleton4, CreatureType.SKELETON);
+
+						s1.setTarget(player);
+						s2.setTarget(player);
+						s3.setTarget(player);
+						s4.setTarget(player);
+
+						player.sendMessage(ChatColor.RED + "You spawned skeletons around yourself!");
+						return true;
+					}
+					else if(args.length == 1)
+					{
+						if(player.getServer().getPlayer(args [0]) != null)
+						{
+							Player targetPlayer = player.getServer().getPlayer(args [0]);
+
+							Location playerLocation = targetPlayer.getLocation();
+							double y = playerLocation.getBlockY();
+							double x = playerLocation.getBlockX();
+							double z = playerLocation.getBlockZ();
+
+							World currentTargetWorld = targetPlayer.getWorld();
+
+							Location Skeleton1 = new Location(currentTargetWorld, x + 2, y, z);
+							Location Skeleton2 = new Location(currentTargetWorld, x - 2, y, z);
+							Location Skeleton3 = new Location(currentTargetWorld, x, y, z + 2);
+							Location Skeleton4 = new Location(currentTargetWorld, x, y, z - 2);
+
+							Skeleton s1 = (Skeleton)targetPlayer.getWorld().spawnCreature(Skeleton1, CreatureType.SKELETON);
+							Skeleton s2 = (Skeleton)targetPlayer.getWorld().spawnCreature(Skeleton2, CreatureType.SKELETON);
+							Skeleton s3 = (Skeleton)targetPlayer.getWorld().spawnCreature(Skeleton3, CreatureType.SKELETON);
+							Skeleton s4 = (Skeleton)targetPlayer.getWorld().spawnCreature(Skeleton4, CreatureType.SKELETON);
+
+							s1.setTarget(targetPlayer);
+							s2.setTarget(targetPlayer);
+							s3.setTarget(targetPlayer);
+							s4.setTarget(targetPlayer);
+
+							targetPlayer.sendMessage(ChatColor.RED + "Skeletons have spawned near you!");
+							player.sendMessage(ChatColor.RED + "You spawned skeletons near " + args [0] + "!");
+							return true;
+						}
+						else
+						{
+							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
+						}
+					}
+				}
+				else
+				{
+					player.sendMessage(ChatColor.RED + "You do not have the proper permissions to use this command");
+				}
+			}
+			if(cmd.getName().equalsIgnoreCase("zombie"))
+			{
+				if(player.hasPermission("torture.zombie")|| player.hasPermission("torture.*"))
+				{
+					if(args.length == 0)
+					{
+						Location playerLocation = player.getLocation();
+						double y = playerLocation.getBlockY();
+						double x = playerLocation.getBlockX();
+						double z = playerLocation.getBlockZ();
+						World currentWorld = ((Player) sender).getPlayer().getWorld();
+
+						Location Zombie1 = new Location(currentWorld, x + 2, y, z);
+						Location Zombie2 = new Location(currentWorld, x - 2, y, z);
+						Location Zombie3 = new Location(currentWorld, x, y, z + 2);
+						Location Zombie4 = new Location(currentWorld, x, y, z - 2);
+
+						Zombie s1 = (Zombie)player.getWorld().spawnCreature(Zombie1, CreatureType.ZOMBIE);
+						Zombie s2 = (Zombie)player.getWorld().spawnCreature(Zombie2, CreatureType.ZOMBIE);
+						Zombie s3 = (Zombie)player.getWorld().spawnCreature(Zombie3, CreatureType.ZOMBIE);
+						Zombie s4 = (Zombie)player.getWorld().spawnCreature(Zombie4, CreatureType.ZOMBIE);
+
+						s1.setTarget(player);
+						s2.setTarget(player);
+						s3.setTarget(player);
+						s4.setTarget(player);
+
+						player.sendMessage(ChatColor.RED + "You spawned zombies around yourself!");
+						return true;
+					}
+					else if(args.length == 1)
+					{
+						if(player.getServer().getPlayer(args [0]) != null)
+						{
+							Player targetPlayer = player.getServer().getPlayer(args [0]);
+
+							Location playerLocation = targetPlayer.getLocation();
+							double y = playerLocation.getBlockY();
+							double x = playerLocation.getBlockX();
+							double z = playerLocation.getBlockZ();
+
+							World currentTargetWorld = targetPlayer.getWorld();
+
+							Location Zombie1 = new Location(currentTargetWorld, x + 2, y, z);
+							Location Zombie2 = new Location(currentTargetWorld, x - 2, y, z);
+							Location Zombie3 = new Location(currentTargetWorld, x, y, z + 2);
+							Location Zombie4 = new Location(currentTargetWorld, x, y, z - 2);
+
+							Zombie s1 = (Zombie)targetPlayer.getWorld().spawnCreature(Zombie1, CreatureType.ZOMBIE);
+							Zombie s2 = (Zombie)targetPlayer.getWorld().spawnCreature(Zombie2, CreatureType.ZOMBIE);
+							Zombie s3 = (Zombie)targetPlayer.getWorld().spawnCreature(Zombie3, CreatureType.ZOMBIE);
+							Zombie s4 = (Zombie)targetPlayer.getWorld().spawnCreature(Zombie4, CreatureType.ZOMBIE);
+
+							s1.setTarget(targetPlayer);
+							s2.setTarget(targetPlayer);
+							s3.setTarget(targetPlayer);
+							s4.setTarget(targetPlayer);
+
+							targetPlayer.sendMessage(ChatColor.RED + "Zombies have spawned near you!");
+							player.sendMessage(ChatColor.RED + "You spawned zombies near " + args [0] + "!");
+							return true;
+						}
+						else
+						{
+							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
+						}
+					}
+				}
+				else
+				{
+					player.sendMessage(ChatColor.RED + "You do not have the proper permissions to use this command");
+				}
+			}
+			if(cmd.getName().equalsIgnoreCase("tstop"))
+			{
+				if(player.hasPermission("torture.tstop")|| player.hasPermission("torture.*"))
+				{
+					if(args.length == 0)
+					{								
+						if (player.hasPotionEffect(PotionEffectType.POISON) == true)
+						{
+							player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 0, 0), true);
+						}
+						if (player.hasPotionEffect(PotionEffectType.BLINDNESS))
+						{
+							player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 0, 0), true);
+						}
+						if (player.hasPotionEffect(PotionEffectType.SLOW))
+						{
+							player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 0, 0), true);
+						}
+						if (player.hasPotionEffect(PotionEffectType.HUNGER))
+						{
+							player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 0, 0), true);
+						}
+						if (player.hasPotionEffect(PotionEffectType.CONFUSION))
+						{
+							player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 0, 0), true);
+						}
+						if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING))
+						{
+							player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 0, 0), true);
+						}
+						player.setHealth(20);
+						player.setFoodLevel(20);
+						player.sendMessage(ChatColor.GREEN + "You are cured!");
+						return true;
+					}
+					else if(args.length == 1)
+					{
+						if(player.getServer().getPlayer(args [0]) != null)
+						{
+							Player targetPlayer = player.getServer().getPlayer(args [0]);
+														
+							if (targetPlayer.hasPotionEffect(PotionEffectType.POISON) == true)
+							{
+								targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 0, 0), true);
+							}
+							if (targetPlayer.hasPotionEffect(PotionEffectType.BLINDNESS))
+							{
+								targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 0, 0), true);
+							}
+							if (targetPlayer.hasPotionEffect(PotionEffectType.SLOW))
+							{
+								targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 0, 0), true);
+							}
+							if (targetPlayer.hasPotionEffect(PotionEffectType.HUNGER))
+							{
+								targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 0, 0), true);
+							}
+							if (targetPlayer.hasPotionEffect(PotionEffectType.CONFUSION))
+							{
+								targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 0, 0), true);
+							}
+							if (targetPlayer.hasPotionEffect(PotionEffectType.SLOW_DIGGING))
+							{
+								targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 0, 0), true);
+							}
+							targetPlayer.setHealth(20);
+							targetPlayer.setFoodLevel(20);
+							targetPlayer.sendMessage(ChatColor.GREEN + "You are cured!");
+							return true;
+						}
+						else
+						{
+							player.sendMessage(ChatColor.RED + args [0] + " is not online.");
+						}
+					}
+				}
+				else
+				{
+					player.sendMessage(ChatColor.RED + "You do not have the proper permissions to use this command");
+				}
 			}
 		}
 		return false;
