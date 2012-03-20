@@ -1,4 +1,3 @@
-
 package me.IronCrystal.Torture;
 
 import java.util.Random;
