@@ -1,13 +1,3 @@
 Sorry for the long file, but this is how I made it.  I hope to make it into separate files.
 
 This is the source code for the Torture plugin that I, IronCrystal, have made.
-
---------------------------------------------
-- Added the ability to send commands through console.
-  (replaced player.getServer with Bukkit.getServer &   player.sendMessage to sender.sendMessage)
-- Fixed upsidedown to target
-  (it would apply it to player, not target)
-- Attempted to make it a bit more efficient
-  (Made perms check before defining what a command does)
-
-kside
