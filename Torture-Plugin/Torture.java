@@ -1,5 +1,6 @@
 package me.IronCrystal.Torture;
 
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -11,6 +12,8 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Player;
@@ -1506,12 +1509,371 @@ public class Torture extends JavaPlugin
 					}
 				}
 			}
+			if(cmd.getName().equalsIgnoreCase("aggro"))
+			{
+				final Random rg = new Random();
+
+				if(args.length == 0)
+				{
+					Location playerLocation = player.getLocation();
+					double x = playerLocation.getBlockX();
+					double y = playerLocation.getBlockY();
+					double z = playerLocation.getBlockZ();
+
+					World currentWorld = player.getWorld();
+
+					Location loc = new Location(currentWorld, x, y, z);
+					loc.setX( loc.getX() + (rg.nextInt((2*10)+1)-10) );
+					loc.setY(loc.getY());
+					loc.setZ( loc.getZ() + (rg.nextInt((2*10)+1)-10) );
+
+					List<Entity> list = player.getNearbyEntities(20, 20, 20);
+
+					if (list.isEmpty())
+					{
+						player.sendMessage(ChatColor.RED + "There are no nearby entities");
+					}
+
+					else
+					{
+						for(Entity ent : player.getNearbyEntities(20,20,20))
+						{
+							if(ent instanceof Creature)
+							{
+								if (ent instanceof Creeper)
+								{
+								}
+								else
+								{
+									Creature mob = (Creature)ent;
+									mob.teleport(loc);
+									mob.setTarget(player);
+								}
+							}
+						}
+						player.sendMessage(ChatColor.RED + "You turned all mobs against you!");
+					}
+				}
+				else if(args.length == 1)
+				{
+					if(Bukkit.getServer().getPlayer(args[0]) != null)
+					{
+						Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+						Location playerLocation = targetPlayer.getLocation();
+						double x = playerLocation.getBlockX();
+						double y = playerLocation.getBlockY();
+						double z = playerLocation.getBlockZ();
+
+						World currentWorld = targetPlayer.getWorld();
+
+						Location loc = new Location(currentWorld, x, y, z);
+						loc.setX( loc.getX() + (rg.nextInt((2*10)+1)-10) );
+						loc.setY(loc.getY());
+						loc.setZ( loc.getZ() + (rg.nextInt((2*10)+1)-10) );
+						List<Entity> list = targetPlayer.getNearbyEntities(20, 20, 20);
+
+						if (list.isEmpty())
+						{
+							player.sendMessage(ChatColor.RED + "There are no nearby entities");
+						}
+
+						else
+						{
+							for(Entity ent : targetPlayer.getNearbyEntities(20,20,20))
+							{
+								if(ent instanceof Creature)
+								{
+									if (ent instanceof Creeper)
+									{
+									}
+									else
+									{
+										Creature mob = (Creature)ent;
+										mob.teleport(loc);
+										mob.setTarget(targetPlayer);
+									}
+								}
+							}
+							targetPlayer.sendMessage(ChatColor.RED + "Nearby mobs have been turned against you!");
+							player.sendMessage(ChatColor.RED + "You turned all nearby mobs against " + args[0]);
+						}
+					}
+					else
+					{
+						player.sendMessage(ChatColor.RED + args [0] + " is not online.");
+					}
+				}
+				else if(args.length == 2)
+				{
+					if(Bukkit.getServer().getPlayer(args[0]) != null)
+					{
+						double distance = Integer.parseInt(args [1]);
+						Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+						Location playerLocation = targetPlayer.getLocation();
+						double x = playerLocation.getBlockX();
+						double y = playerLocation.getBlockY();
+						double z = playerLocation.getBlockZ();
+
+						World currentWorld = targetPlayer.getWorld();
+
+						Location loc = new Location(currentWorld, x, y, z);
+						loc.setX( loc.getX() + (rg.nextInt((2*10)+1)-10) );
+						loc.setY(loc.getY());
+						loc.setZ( loc.getZ() + (rg.nextInt((2*10)+1)-10) );
+						List<Entity> list = targetPlayer.getNearbyEntities(distance, distance, distance);
+
+						if (list.isEmpty())
+						{
+							player.sendMessage(ChatColor.RED + "There are no nearby entities");
+						}
+
+						else
+						{
+							for(Entity ent : targetPlayer.getNearbyEntities(distance,distance,distance))
+							{
+								if(ent instanceof Creature)
+								{
+									if (ent instanceof Creeper)
+									{
+									}
+									else
+									{
+										Creature mob = (Creature)ent;
+										mob.teleport(loc);
+										mob.setTarget(targetPlayer);
+									}
+								}
+							}
+							targetPlayer.sendMessage(ChatColor.RED + "Nearby mobs have been turned against you!");
+							player.sendMessage(ChatColor.RED + "You turned all nearby mobs against " + args[0]);
+						}
+					}
+					else
+					{
+						player.sendMessage(ChatColor.RED + args [0] + " is not online.");
+					}
+				}
+			}
+			if(cmd.getName().equalsIgnoreCase("random"))
+			{
+				final Random rg = new Random();
+
+				if (args.length == 0)
+				{
+					int command = rg.nextInt(24) + 1;
+					if (command == 1)
+					{
+						player.performCommand("starve");
+					}
+					if (command == 2)
+					{
+						player.performCommand("hurt");
+					}
+					if (command == 3)
+					{
+						player.performCommand("ignite");
+					}
+					if (command == 4)
+					{
+						player.performCommand("die");
+					}
+					if (command == 5)
+					{
+						player.performCommand("painful");
+					}
+					if (command == 6)
+					{
+						player.performCommand("ill");
+					}
+					if (command == 7)
+					{
+						player.performCommand("blind");
+					}
+					if (command == 8)
+					{
+						player.performCommand("poison");
+					}
+					if (command == 9)
+					{
+						player.performCommand("hungry");
+					}
+					if (command == 10)
+					{
+						player.performCommand("torture");
+					}
+					if (command == 11)
+					{
+						player.performCommand("slow");
+					}
+					if (command == 12)
+					{
+						player.performCommand("explode");
+					}
+					if (command == 13)
+					{
+						player.performCommand("fall");
+					}
+					if (command == 14)
+					{
+						player.performCommand("creeper");
+					}
+					if (command == 15)
+					{
+						player.performCommand("upsidedown");
+					}
+					if (command == 16)
+					{
+						player.performCommand("annoy");
+					}
+					if (command == 17)
+					{
+						player.performCommand("rabid");
+					}
+					if (command == 18)
+					{
+						player.performCommand("suffocate");
+					}
+					if (command == 19)
+					{
+						player.performCommand("rainoffire");
+					}
+					if (command == 20)
+					{
+						player.performCommand("spider");
+					}
+					if (command == 21)
+					{
+						player.performCommand("skeleton");
+					}
+					if (command == 22)
+					{
+						player.performCommand("zombie");
+					}
+					if (command == 23)
+					{
+						player.performCommand("tstop");
+					}
+					if (command == 24)
+					{
+						player.performCommand("aggro");
+					}
+				}
+				if (args.length == 1)
+				{
+					if (Bukkit.getServer().getPlayer(args [0]) != null)
+					{
+						Player targetPlayer = Bukkit.getServer().getPlayer(args [0]);
+						int command = rg.nextInt(24) + 1;
+						if (command == 1)
+						{
+							targetPlayer.performCommand("starve");
+						}
+						if (command == 2)
+						{
+							targetPlayer.performCommand("hurt");
+						}
+						if (command == 3)
+						{
+							targetPlayer.performCommand("ignite");
+						}
+						if (command == 4)
+						{
+							targetPlayer.performCommand("die");
+						}
+						if (command == 5)
+						{
+							targetPlayer.performCommand("painful");
+						}
+						if (command == 6)
+						{
+							targetPlayer.performCommand("ill");
+						}
+						if (command == 7)
+						{
+							targetPlayer.performCommand("blind");
+						}
+						if (command == 8)
+						{
+							targetPlayer.performCommand("poison");
+						}
+						if (command == 9)
+						{
+							targetPlayer.performCommand("hungry");
+						}
+						if (command == 10)
+						{
+							targetPlayer.performCommand("torture");
+						}
+						if (command == 11)
+						{
+							targetPlayer.performCommand("slow");
+						}
+						if (command == 12)
+						{
+							targetPlayer.performCommand("explode");
+						}
+						if (command == 13)
+						{
+							targetPlayer.performCommand("fall");
+						}
+						if (command == 14)
+						{
+							targetPlayer.performCommand("creeper");
+						}
+						if (command == 15)
+						{
+							targetPlayer.performCommand("upsidedown");
+						}
+						if (command == 16)
+						{
+							targetPlayer.performCommand("annoy");
+						}
+						if (command == 17)
+						{
+							targetPlayer.performCommand("rabid");
+						}
+						if (command == 18)
+						{
+							targetPlayer.performCommand("suffocate");
+						}
+						if (command == 19)
+						{
+							targetPlayer.performCommand("rainoffire");
+						}
+						if (command == 20)
+						{
+							targetPlayer.performCommand("spider");
+						}
+						if (command == 21)
+						{
+							targetPlayer.performCommand("skeleton");
+						}
+						if (command == 22)
+						{
+							targetPlayer.performCommand("zombie");
+						}
+						if (command == 23)
+						{
+							targetPlayer.performCommand("tstop");
+						}
+						if (command == 24)
+						{
+							targetPlayer.performCommand("aggro");
+						}
+						targetPlayer.sendMessage(ChatColor.RED + "A random command has been done to you!");
+						player.sendMessage(ChatColor.RED + "You have done a random command to " + args [0]);
+					}
+					else
+					{
+						player.sendMessage(ChatColor.RED + args [0] + " is not online");
+					}
+				}
+			}
 		}
 		else
 		{
 			player.sendMessage(ChatColor.RED + "You do not have the proper permissions to use this command");
 		}
-
 		return false;
 	}
 }
